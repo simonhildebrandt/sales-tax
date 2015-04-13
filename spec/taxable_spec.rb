@@ -4,29 +4,51 @@ require_relative '../taxable'
 class TaxableClass
   include Taxable
 
-  def initialize(price)
+  def initialize(price, sales_tax_exempt=false)
     @price = price
+    @sales_tax_exempt = sales_tax_exempt
   end
 
   def shelf_price
     @price
   end
+
+  def exempt_from(tax)
+    @sales_tax_exempt if tax == :sales_tax
+  end
 end
 
 describe Taxable do
-  let(:compact_disc) { TaxableClass.new(14.99) }
 
-  context "calculates a 10% sales tax" do
+  context "applies taxes selectively" do
+    let(:book) { TaxableClass.new(12.49, true) }
+    let(:compact_disc) { TaxableClass.new(14.99, false) }
+
+    it { expect(book.sales_tax).to eq 0.0 }
+    it { expect(book.import_duty).to eq 0.65 }
+    it { expect(book.total_tax).to eq 0.65 }
+
     it { expect(compact_disc.sales_tax).to eq 1.50 }
-  end
-
-  context "calculates a 5% import duty" do
     it { expect(compact_disc.import_duty).to eq 0.75 }
-  end
-
-  context "calculates a total tax" do
     it { expect(compact_disc.total_tax).to eq 2.25 }
   end
+
+  context "calculates taxes" do
+    let(:compact_disc) { TaxableClass.new(14.99) }
+
+    context "of 10% for sales tax" do
+      it { expect(compact_disc.sales_tax).to eq 1.50 }
+    end
+
+    context "of 5% for import duty" do
+      it { expect(compact_disc.import_duty).to eq 0.75 }
+    end
+
+    context "and total tax" do
+      it { expect(compact_disc.total_tax).to eq 2.25 }
+    end
+  end
+
 
   context "rounds up to nearest five cents" do
     # TODO: Consider cooking the values out and creating a loop
