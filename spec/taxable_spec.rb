@@ -4,9 +4,12 @@ require_relative '../taxable'
 class TaxableClass
   include Taxable
 
-  def initialize(price, sales_tax_exempt=false)
+  def initialize(price, sales_tax=true, import_duty=true)
     @price = price
-    @sales_tax_exempt = sales_tax_exempt
+    @tax_categories = {
+      sales_tax: sales_tax,
+      import_duty: import_duty
+    }
   end
 
   def shelf_price
@@ -14,23 +17,29 @@ class TaxableClass
   end
 
   def exempt_from(tax)
-    @sales_tax_exempt if tax == :sales_tax
+    !@tax_categories.fetch(tax, false)
   end
 end
 
 describe Taxable do
 
   context "applies taxes selectively" do
-    let(:book) { TaxableClass.new(12.49, true) }
-    let(:compact_disc) { TaxableClass.new(14.99, false) }
+    let(:book) { TaxableClass.new(12.49, false, false) }
+    let(:imported_book) { TaxableClass.new(12.49, false, true) }
+    let(:compact_disc) { TaxableClass.new(14.99, true, false) }
+    let(:imported_compact_disc) { TaxableClass.new(14.99, true, true) }
 
     it { expect(book.sales_tax).to eq 0.0 }
-    it { expect(book.import_duty).to eq 0.65 }
-    it { expect(book.total_tax).to eq 0.65 }
+    it { expect(book.import_duty).to eq 0.0 }
 
     it { expect(compact_disc.sales_tax).to eq 1.50 }
-    it { expect(compact_disc.import_duty).to eq 0.75 }
-    it { expect(compact_disc.total_tax).to eq 2.25 }
+    it { expect(compact_disc.import_duty).to eq 0.0 }
+
+    it { expect(imported_book.sales_tax).to eq 0.0 }
+    it { expect(imported_book.import_duty).to eq 0.65 }
+
+    it { expect(imported_compact_disc.sales_tax).to eq 1.50 }
+    it { expect(imported_compact_disc.import_duty).to eq 0.75 }
   end
 
   context "calculates taxes" do
