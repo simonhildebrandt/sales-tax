@@ -14,9 +14,14 @@ class TaxableClass
 end
 
 describe Taxable do
+  let(:compact_disc) { TaxableClass.new(14.99) }
+
   context "calculates a 10% sales tax" do
-    let(:compact_disc) { TaxableClass.new(14.99) }
     it { expect(compact_disc.sales_tax).to eq 1.50 }
+  end
+
+  context "calculates a 5% import duty" do
+    it { expect(compact_disc.import_duty).to eq 0.75 }
   end
 
   context "rounds up to nearest five cents" do

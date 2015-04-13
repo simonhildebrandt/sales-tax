@@ -3,6 +3,10 @@ module Taxable
     Taxable.round_up_to_nearest_five_cents(tax_value(shelf_price, 10))
   end
 
+  def import_duty
+    Taxable.round_up_to_nearest_five_cents(tax_value(shelf_price, 5))
+  end
+
   def tax_value(price, tax)
     price * tax * 0.01
   end
