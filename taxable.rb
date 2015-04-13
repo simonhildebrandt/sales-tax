@@ -27,6 +27,6 @@ module Taxable
   end
 
   def self.round_up_to_nearest_five_cents(value)
-    BigDecimal.new((value*20).ceil.to_i) / 20.0
+    BigDecimal.new((value*20).ceil) / 20.0
   end
 end

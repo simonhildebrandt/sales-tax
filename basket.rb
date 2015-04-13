@@ -10,6 +10,11 @@ class Basket
     end
   end
 
+  def print_receipt
+    items.collect(&:to_s).join("\n") +
+      "\nSales Taxes: #{'%.2f' % total_tax}\nTotal: #{'%.2f' % total_price}"
+  end
+
   def items
     @items
   end
@@ -28,6 +33,10 @@ class Basket
 
   class Item < OpenStruct
     include Taxable
+
+    def to_s
+      "#{quantity}, #{product}, #{price}"
+    end
 
     def total_price
       shelf_price + total_tax
