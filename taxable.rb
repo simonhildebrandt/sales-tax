@@ -1,4 +1,8 @@
 module Taxable
+  def total_tax
+    sales_tax + import_duty
+  end
+
   def sales_tax
     Taxable.round_up_to_nearest_five_cents(tax_value(shelf_price, 10))
   end

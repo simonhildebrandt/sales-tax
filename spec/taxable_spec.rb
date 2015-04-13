@@ -24,6 +24,10 @@ describe Taxable do
     it { expect(compact_disc.import_duty).to eq 0.75 }
   end
 
+  context "calculates a total tax" do
+    it { expect(compact_disc.total_tax).to eq 2.25 }
+  end
+
   context "rounds up to nearest five cents" do
     # TODO: Consider cooking the values out and creating a loop
     it { expect(Taxable.round_up_to_nearest_five_cents(0.01)).to eq 0.05 }
