@@ -52,6 +52,9 @@ the receipt.
     Total: 74.68
 #Coding Style
 Please follow the guidelines below when developing this project.
-Ruby Coding Style Guidelines - https://github.com/styleguide
-References
-[1] http://www.ruby-lang.org [2] https://www.relishapp.com/rspec/
+
+- Ruby Coding Style Guidelines - https://github.com/styleguide
+
+#References
+[1] http://www.ruby-lang.org
+[2] https://www.relishapp.com/rspec/
